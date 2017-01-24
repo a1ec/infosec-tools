@@ -39,7 +39,7 @@ grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' fierce.$domain | grep -
 # extract hosts from theharvester
 grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' theharvester.$domain | tr ':' ' ' | sed -e 's/\s\+/,/g' >> $domain.hosts
 
-# sort hosts by IPv4 subnets, remove duplicates including different case
-sort -ufV $domain.hosts | grep $domain > $domain.hosts.tmp
+# fold all uppercase to lower, then remove duplicates and sort hosts by IPv4 subnets
+cat $domain.hosts | tr '[:upper:]' '[:lower:]' | sort -uV | grep $domain | wc -l > $domain.hosts.tmp
 mv $domain.hosts.tmp $domain.hosts
 ####
