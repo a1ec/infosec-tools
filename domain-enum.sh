@@ -35,11 +35,11 @@ grep '@$domain' theharvester.$domain | sort -uf >> $domain.emails
 #### Host Enumeration
 # extract hosts from fierce output , exclude the lines reporting subnet stats
 grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' fierce.$domain | grep -v 'hostnames found' | sed -e 's/\s\+/,/g' >> $domain.hosts
-# TODO remove trailing '.' and ',' from domain entries
+
 # extract hosts from theharvester
 grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' theharvester.$domain | tr ':' ' ' | sed -e 's/\s\+/,/g' >> $domain.hosts
 
-# fold all uppercase to lower, then remove duplicates and sort hosts by IPv4 subnets
-cat $domain.hosts | tr '[:upper:]' '[:lower:]' | sort -uV | grep $domain | wc -l > $domain.hosts.tmp
+# fold all uppercase to lower, remove duplicates, sort hosts by IPv4 subnets and remove trailing commas
+cat $domain.hosts | tr '[:upper:]' '[:lower:]' | sort -uV | sed 's/[,.]$//' | grep $domain > $domain.hosts.tmp
 mv $domain.hosts.tmp $domain.hosts
 ####
