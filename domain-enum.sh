@@ -16,10 +16,9 @@ else
 fi
 
 # run domain reconnaissance tools
-echo " Run maltego and export CSV"; sleep 1
-echo " Run recon-ng and export CSV"; sleep 1
-theharvester -d $domain -l 1000 -b all -v theharvester.out | tee theharvester.$domain
+echo "Have you run recon-ng, maltego, dnsdumpster and exported CSV results?"; sleep 2
 fierce -th 32 -dns $domain -wordlist /usr/share/wordlists/dnsmap.txt -file fierce.$domain
+theharvester -d $domain -l 1000 -b all -v theharvester.out | tee theharvester.$domain
 
 # TODO add discover - https://github.com/leebaird/discover
 # TODO add recon-ng
@@ -40,7 +39,7 @@ grep @$domain theharvester.$domain | sort -uf | tee theharvester.aarnet.edu.au.e
 ###########
 # maltego #
 ###########
-# extract hostnames,currently must run maltego manually, enter domain, run machine and export to CSV
+# TODO run maltego manually, enter domain, run machine and export to CSV
 grep $domain maltego.$domain | cut -d, -f2 | sort -uV | tee maltego.$domain.tmp
 cat maltego.$domain* | cut -d, -f1 | grep $domain | grep -v '@$domain' | tr '[:upper:]' '[:lower:]' | sort -uV | tee maltego.$domain.hosts
 grep @$domain maltego.$domain* | cut -d',' -f2 | cut -d':' -f2 | sort -uf | tee maltego.$domain.emails
@@ -54,6 +53,7 @@ grep $domain fierce.$domain | grep -v 'hostnames found' | sed -e 's/\s\+/,/g' | 
 ############
 # recon-ng #
 ############
+# TODO run recon-ng with domain input and script
 cut -d, -f1 recon-ng.$domain | tr -d '"' | tee recon-ng.$domain.hosts
 cut -d, -f2 recon-ng.$domain | tr -d '"' | sort -uV | tee recon-ng.$domain.ipv4s
 
