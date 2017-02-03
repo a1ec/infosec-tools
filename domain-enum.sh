@@ -23,7 +23,6 @@ theharvester -d $domain -l 1000 -b all -v theharvester.out | tee theharvester.$d
 # TODO add discover - https://github.com/leebaird/discover
 # TODO add recon-ng
 # TODO add censys.io
-# TODO altDNS add
 # TODO and assetnote
 
 ################
@@ -65,8 +64,17 @@ cut -d, -f2 recon-ng.$domain | tr -d '"' | sort -uV | tee recon-ng.$domain.ipv4s
 cut -f1 dnsdumpster.aarnet.edu.au | sort -u | tee dnsdumpster.$domain.hosts
 cut -f2 dnsdumpster.aarnet.edu.au | sort -uV | tee dnsdumpster.$domain.ipv4s
 
+##########
+# altdns #
+##########
+# run altdns after collecting all other results to seed permutations
+cat *$domain.hosts  | grep $domain | tr '[:upper:]' '[:lower:]' | sort -uV | sed 's/[,.]$//' | tee $domain.hosts
+wordlist=/usr/share/wordlists/altdns-words.txt
+altdns.py -i $domain.hosts -o altdns.$domain.list -w $wordlist -r -s altdns.$domain -t 64
+cut -d':' -f1 altdns.$domain | tee altdns.$domain.hosts
+
 # Merge all tool output
 # fold all uppercase to lower, remove duplicates, sort hosts by IPv4 subnets and remove trailing commas
-cat *$domain.hosts  | tr '[:upper:]' '[:lower:]' | sort -uV | sed 's/[,.]$//' | grep $domain | tee $domain.hosts
-cat *$domain.emails | tr '[:upper:]' '[:lower:]' | sort -uV | sed 's/[,.]$//' | grep $domain | tee $domain.emails
+cat *$domain.hosts  | grep $domain | tr '[:upper:]' '[:lower:]' | sort -uV | sed 's/[,.]$//' | tee $domain.hosts
+cat *$domain.emails | grep $domain | tr '[:upper:]' '[:lower:]' | sort -uV | sed 's/[,.]$//' | tee $domain.emails
 cat *$domain.ipv4s  | sort -uV  | tee $domain.ipv4s
