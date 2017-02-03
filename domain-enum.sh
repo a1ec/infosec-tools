@@ -33,7 +33,7 @@ grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' theharvester.$domain | 
 cut -d, -f1 theharvester.$domain.csv | sort -uV | tee theharvester.$domain.ipv4s
 cut -d, -f2 theharvester.$domain.csv | grep $domain | tr '[:upper:]' '[:lower:]' | sort -uV | tee theharvester.$domain.hosts
 # extract emails only from domain, remove duplicates, ignore case
-grep @$domain theharvester.$domain | sort -uf | tee theharvester.aarnet.edu.au.emails
+grep @$domain theharvester.$domain | sort -uf | tee theharvester.$domain.emails
 
 ###########
 # maltego #
@@ -61,8 +61,8 @@ cut -d, -f2 recon-ng.$domain | tr -d '"' | sort -uV | tee recon-ng.$domain.ipv4s
 ###############
 # TODO curl requests for domain at https://dnsdumpster.com
 # TODO download xlsx and convert to CSV 
-cut -f1 dnsdumpster.aarnet.edu.au | sort -u | tee dnsdumpster.$domain.hosts
-cut -f2 dnsdumpster.aarnet.edu.au | sort -uV | tee dnsdumpster.$domain.ipv4s
+cut -f1 dnsdumpster.$domain | sort -u | tee dnsdumpster.$domain.hosts
+cut -f2 dnsdumpster.$domain | sort -uV | tee dnsdumpster.$domain.ipv4s
 
 ##########
 # altdns #
