@@ -58,6 +58,6 @@ tcpscan
 udpscan
 
 echo "Putting tcp and udp results togther..."
-cat $path.tcp.nmap $path.udp.nmap > $host-$timenow.cornmap.out
+cat $path.tcp.nmap $path.udp.nmap > cornmap.$host-$timenow
 echo "Finished cornmap scan."
 exit 0
